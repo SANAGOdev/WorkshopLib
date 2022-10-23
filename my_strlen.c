@@ -1,0 +1,18 @@
+/*
+** EPITECH PROJECT, 2022
+** my strlen
+** File description:
+** my strlen
+*/
+
+#include "my.h"
+
+int my_strlen(char const *str)
+{
+    int i = 0;
+    while (str[i] != '\0') {
+        i++;
+    }
+    my_put_nbr(i);
+    return 0;
+}

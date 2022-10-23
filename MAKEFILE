@@ -1,0 +1,47 @@
+NAME      = libmy.a
+T_NAME    = unit_tests
+
+CC        = gcc -g
+
+AR        = ar rcs
+
+RM        = rm -f
+
+SRCS	  = $(wildcard ./*.c) $(wildcard ./**/*.c)
+OBJS	  = $(SRCS:.c=.o)
+
+T_SRCS	  = $(wildcard ./tests/*.c) $(wildcard ./tests/**/*.c)
+T_OBJS	  = $(T_SRCS:.c=.o)
+
+ifeq ($(CFLAGS),)
+CFLAGS	  += -I ./include -Wall -Wextra
+endif
+LDFLAGS	  = -L .
+LDLIBS    = -lmy
+
+all: $(NAME)
+
+$(NAME): CFLAGS += $(T_FLAGS)
+$(NAME): $(OBJS)
+	 $(AR) $(NAME) $(OBJS)
+
+clean:
+	$(RM) $(OBJS)
+	$(RM) $(T_OBJS)
+	find -type f -name '*.gcno' -delete -o -name '*.gcda' -delete
+
+fclean: clean
+	$(RM) $(NAME)
+	$(RM) $(T_NAME)
+
+$(T_NAME): T_FLAGS += -coverage
+$(T_NAME): LDLIBS += -lcriterion -lgcov
+$(T_NAME): $(NAME) $(T_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(T_OBJS) $(LDFLAGS) $(LDLIBS)
+
+run_tests: $(T_NAME)
+	./$^
+
+re: fclean all
+
+.PHONY: all clean fclean re run_tests
