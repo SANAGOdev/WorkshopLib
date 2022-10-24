@@ -10,9 +10,12 @@
 int my_strlen(char const *str)
 {
     int i = 0;
+    if (str[i] == '\0') {
+        return 0;
+    }
     while (str[i] != '\0') {
         i++;
     }
-    my_put_nbr(i);
-    return 0;
+    return i;
 }
+
